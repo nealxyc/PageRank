@@ -1,0 +1,41 @@
+===
+Wed Mar  4 10:30:42 PST 2015
+Read graph: 19.3 seconds.
+Preprocess graph: 7.1 seconds
+Page Rank: 176.9 seconds.
+Done after 70 iterations.
+
+real	3m26.740s
+user	3m24.339s
+sys	0m1.645s
+
+=== Changed computation. Pushing out scores of every node instead of pulling in.
+Read graph: 17.4 seconds.
+Preprocess graph: 6.5 seconds
+Page Rank: 170.0 seconds.
+Done after 67 iterations.
+
+real	3m16.300s
+user	3m14.067s
+sys	0m1.136s
+
+=== loop through keys in g instead of every node
+Read graph: 17.1 seconds.
+Preprocess graph: 6.6 seconds
+Page Rank: 161.8 seconds.
+Done after 67 iterations.
+
+real	3m7.842s
+user	3m6.182s
+sys	0m1.057s
+
+=== Multiply by beta and fix leak at the same time
+Wed Mar  4 15:55:17 PST 2015
+Read graph: 17.1 seconds.
+Preprocess graph: 6.7 seconds
+Page Rank: 151.5 seconds.
+Done after 67 iterations.
+
+real	2m57.684s
+user	2m55.967s
+sys	0m1.209s
