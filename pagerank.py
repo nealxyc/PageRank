@@ -29,13 +29,19 @@ def pageRank(nodes, g, inG, beta=0.8, e=1e-8, n=1e3):
   rang = range(len(r))
   diff = e + 1
   t = 1
-  idx = dict(zip(nodes, rang)) # maps node number -> array index
   while diff > e and (n == -1 or t < n):
     sum_r = 0.0
     for n in nodes:
-      r_[n] = beta * sum([r[i]/g[i] for i in inG[n]]) if n in inG else 0.0
-      sum_r += r_[n]
-    leaked = 1 - sum_r
+      if n in inG:
+	_rn = 0.0
+        for i in inG[n]:
+	  _rn += r[i]/g[i]
+	r_[n] = beta * _rn
+	sum_r += r_[n]
+      else:
+	r_[n] = 0.0
+#      r_[n] = beta * sum([r[i]/g[i] for i in inG[n]]) if n in inG else 0.0
+      leaked = 1 - sum_r
     if leaked > 0:
       incre = leaked/len(r_)
       for n in nodes:
