@@ -18,28 +18,30 @@ def readGraph(lines):
     nodes.add(v)
   return g, inG, sorted(nodes)
 
-def vectorMinus(l1, l2, sign=-1):
-  if len(l1) != len(l2):
-    raise Exception('Adding two vectors with different length! {0} and {1}'.format(len(l1), len(l2)))
-  return [l1[i] + sign * l2[i] for i in range((len(l1)))]  
-
-def vectorAdd(l1, l2):
-  return vectorMinus(l1, l2, 1)
-
-def sumAbs(l):
-  return sum([abs(i) for i in l])
+def diffVector(l1, l2,rang):
+  return sum([abs(l1[i] - l2[i]) for i in rang])
 
 def pageRank(nodes, g, inG, beta=0.8, e=1e-8, n=1e3):
   r = [1.0/len(nodes)] * len(nodes)
   #r = dict(zip(nodes, [1.0/len(nodes)] * len(nodes)))
   r_ = list(r)
   #r_ = {}
+  rang = range(len(r))
   diff = e + 1
   t = 1
-  idx = dict(zip(nodes, range(len(nodes)))) # maps node number -> array index
+  idx = dict(zip(nodes, rang)) # maps node number -> array index
   while diff > e and (n == -1 or t < n):
-    iterate(r, r_, beta, nodes, g, inG, idx)
-    diff = sumAbs(vectorMinus(r, r_))
+    sum_r = 0.0
+    for _i in rang:
+      j = nodes[_i]
+      r_[_i] = beta * sum([r[idx[i]]/g[i] for i in inG[j]]) if j in inG else 0.0
+      sum_r += r_[_i]
+    leaked = 1 - sum_r
+    if leaked > 0:
+      incre = leaked/len(r_)
+      for _i in rang:
+	r_[_i] += incre
+    diff = diffVector(r, r_, rang)
     r, r_ = r_, r
     t += 1
   return r, t
