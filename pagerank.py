@@ -1,11 +1,13 @@
 #!/usr/bin/python
 
+from array import array
+
 def readGraph(lines):
   g = {} # node number -> out-link counts 
   inG = {} # node number -> set of in-link node numbers
   nodes = set() # all nodes
   for line in lines:
-    line = line.strip()
+    #line = line.strip()
     if line.startswith('#'):
       continue
     l = line.split()
@@ -22,11 +24,9 @@ def diffVector(l1, l2,rang):
   return sum([abs(l1[i] - l2[i]) for i in rang])
 
 def pageRank(nodes, g, inG, beta=0.8, e=1e-8, n=1e3):
-  r = [1.0/len(nodes)] * len(nodes)
-  #r = dict(zip(nodes, [1.0/len(nodes)] * len(nodes)))
-  r_ = list(r)
-  #r_ = {}
-  rang = range(len(r))
+  r = array('f',[1.0/len(nodes)] * len(nodes))
+  r_ = array('f', r)
+  rang = array('l', range(len(r)))
   diff = e + 1
   t = 1
   idx = dict(zip(nodes, rang)) # maps node number -> array index
