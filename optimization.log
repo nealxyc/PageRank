@@ -39,3 +39,25 @@ Done after 67 iterations.
 real	2m57.684s
 user	2m55.967s
 sys	0m1.209s
+
+=== use numpy.array
+Wed Mar  4 17:25:58 PST 2015
+Read graph: 17.9 seconds.
+Preprocess graph: 6.7 seconds
+Page Rank: 429.5 seconds.
+Done after 67 iterations.
+
+real	7m37.321s
+user	7m31.522s
+sys	0m2.745s
+
+=== Back to master. Removed lambda
+Wed Mar  4 17:49:34 PST 2015
+Read graph: 16.9 seconds.
+Preprocess graph: 6.6 seconds
+Page Rank: 142.8 seconds.
+Done after 67 iterations.
+
+real	2m48.735s
+user	2m45.909s
+sys	0m1.534s

@@ -38,8 +38,12 @@ def transformGraph(nodes, inG, g):
     idxG[idx[node]] = set([idx[outNode] for outNode in outNodes])
   return idxInG, idxG
 
-def fillVector(r, num, rang=None):
-  forEachElement(r, lambda x, i: num)
+def fillVector(r, num):
+  i = 0
+  size = len(r)
+  while i < size:
+    r[i] = num
+    i += 1
 
 def forEachElement(r, func):
   i = 0
@@ -59,8 +63,8 @@ def pageRank(nodes, g, inG, beta=0.8, e=1e-8, n=1e2, debug=False):
   while diff > e and (n == -1 or t < n):
     sum_r = 0.0
     i = 0
-    # fill in 0s 
-    forEachElement(r_, (lambda x,_i: 0.0))
+    # fill in 0s
+    fillVector(r_, 0.0)
     for i,jSet in g.iteritems():
       scoreShare = r[i]/len(jSet)
       sum_r += r[i]
@@ -70,8 +74,13 @@ def pageRank(nodes, g, inG, beta=0.8, e=1e-8, n=1e2, debug=False):
     sum_r = sum_r * beta
     leaked = 1 - sum_r
     leakedShare = leaked / size if leaked > 0 else 0.0
-    # multiply by beta and fix leak at the same time
-    forEachElement(r_, (lambda x, _i: x * beta + leakedShare))
+    
+    _i = 0
+    while _i < size:
+      # multiply by beta and fix leak at the same time
+      r_[_i] = r_[_i] * beta + leakedShare
+      _i +=1
+    
     diff = diffVector(r, r_)
     r, r_ = r_, r
     t += 1
