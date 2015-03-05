@@ -187,16 +187,18 @@ if __name__ == '__main__':
   args = parser.parse_args()
  
   _debug = args.debug
-  timer = time.time()
+  timer = 0 - time.time()
   lines = fileinput.input()
   g, inG, nodes = readGraph(sys.stdin)
-  print >> sys.stderr, 'Read graph: {0:.1f} seconds.'.format(time.time() - timer)
+  timer += time.time()
+  print >> sys.stderr, 'Read graph: {0:.1f} seconds.'.format(timer)
 
   timer = 0 - time.time()
   inG, g = transformGraph(nodes, inG, g)
   timer += time.time()
   print >> sys.stderr, 'Preprocess graph: {0:.1f} seconds'.format(timer)
 
+  log('Processes: {0}'.format(args.p))
   timer = 0 - time.time() 
   r, t = pageRank(nodes, g, inG, threads=args.p)
   timer += time.time()
