@@ -76,3 +76,18 @@ Done after 67 iterations.
 real	4m33.272s
 user	4m15.684s
 sys	1m29.875s
+
+=== multiprocess
+Thu Mar  5 00:45:54 PST 2015
+Read graph: 21.1 seconds.
+Preprocess graph: 7.6 seconds
+T0: lower=0, higher=218928
+T1: lower=218928, higher=437856
+T2: lower=437856, higher=656784
+T3: lower=656784, higher=875713
+Page Rank: 73.8 seconds.
+Done after 67 iterations.
+
+real	1m46.642s
+user	4m16.118s
+sys	0m2.656s

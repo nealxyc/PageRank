@@ -1,9 +1,10 @@
 #!/usr/bin/python
 
-import threading
 import sys
 
 from array import array
+from multiprocessing import Process,Event,Pipe,Array
+from ctypes import c_double
 
 def readGraph(lines):
   g = {} # node number -> out-link counts 
@@ -65,9 +66,9 @@ def log(msg):
    print >>sys.stderr, msg
 
 def iterate(tid, r, r_, g, inG, idx, shared):
-  diff = shared['diff'][tid]
   t = 1
   e = shared['e']
+  diff = e + 1
   n = shared['n']
   size = shared['size']
   lower = shared['lower'][tid]
@@ -94,10 +95,11 @@ def iterate(tid, r, r_, g, inG, idx, shared):
       j += 1
     
     sum_r *= beta
-    shared['sum_r'][tid] = sum_r
+    shared['sum_r'][tid][0].send(sum_r)
+    #shared['sum_r'][tid] = sum_r
     shared['children'][tid].set() # shared['childEvents'] is a list of threading.Event objects
     waitForMain(shared)
-    sum_r = shared['sum_r'][tid]
+    sum_r = shared['sum_r'][tid][0].recv()
     leaked = 1 - sum_r
     leakedShare = leaked / size if leaked > 0 else 0.0
     _i = lower
@@ -107,19 +109,19 @@ def iterate(tid, r, r_, g, inG, idx, shared):
       _i +=1
 
     diff = diffVector(r, r_, lower, higher)
-    shared['diff'][tid] = diff
+    shared['diff'][tid][0].send(diff)
     shared['children'][tid].set()
     waitForMain(shared)
 
-    diff = shared['diff'][tid]
+    diff = shared['diff'][tid][0].recv()
     r, r_ = r_, r
     t += 1
 
 
 def pageRank(nodes, g, inG, beta=0.8, e=1e-8, n=1e2, threads=4):
   size = len(nodes)
-  r = array('d',[1.0/size] * size)
-  r_ = array('d',r)
+  r = Array(c_double,[1.0/size] * size, lock=False)
+  r_ = Array(c_double,r, lock=False)
   idx = dict(zip(nodes, range(len(nodes))))
   threadPool = []
   shared = {
@@ -129,18 +131,20 @@ def pageRank(nodes, g, inG, beta=0.8, e=1e-8, n=1e2, threads=4):
       'lower': [0] * threads, 
       'higher': [0] * threads, 
       'beta': beta,
-      'sum_r': [0.0] * threads, 
+      'sum_r': [None] * threads, 
       'children': [None] * threads, 
-      'main': threading.Event(),
-      'diff': [e + 1] * threads,
+      'main': Event(),
+      'diff': [None] * threads,
       'threads': threads
       }
 
   for tid in range(threads):
     shared['lower'][tid] = tid * size / threads
     shared['higher'][tid] = (tid + 1) * size / threads
-    shared['children'][tid] = threading.Event()
-    threadPool.append(threading.Thread(target=iterate, args=(tid, r, r_, g, inG, idx, shared)))
+    shared['children'][tid] = Event()
+    shared['sum_r'][tid] = Pipe()
+    shared['diff'][tid] = Pipe()
+    threadPool.append(Process(target=iterate, args=(tid, r, r_, g, inG, idx, shared)))
     threadPool[-1].start()
   diff = 1 + e
   t = 1
@@ -148,13 +152,13 @@ def pageRank(nodes, g, inG, beta=0.8, e=1e-8, n=1e2, threads=4):
     waitForChildren(shared)
 
     # now to compute the whole sum_r
-    sum_r = sum(shared['sum_r'])
-    fillVector(shared['sum_r'], sum_r)
+    sum_r = sum([tup[1].recv() for tup in shared['sum_r']])
+    temp = [tup[1].send(sum_r) for tup in shared['sum_r']]
     shared['main'].set()
 
     waitForChildren(shared) 
-    diff = sum(shared['diff'])
-    fillVector(shared['diff'], diff)
+    diff = sum([tup[1].recv() for tup in shared['diff']])
+    temp = [tup[1].send(diff) for tup in shared['diff']]
 
     shared['main'].set()
     t += 1
@@ -175,11 +179,17 @@ def waitForMain(shared):
 if __name__ == '__main__':
   import fileinput
   import time
-
-  _debug = True
+  import argparse
+  
+  parser = argparse.ArgumentParser()
+  parser.add_argument('-v', dest='debug', action='store_true')
+  parser.add_argument('-p', dest='p', type=int, default=1)
+  args = parser.parse_args()
+ 
+  _debug = args.debug
   timer = time.time()
   lines = fileinput.input()
-  g, inG, nodes = readGraph(lines)
+  g, inG, nodes = readGraph(sys.stdin)
   print >> sys.stderr, 'Read graph: {0:.1f} seconds.'.format(time.time() - timer)
 
   timer = 0 - time.time()
@@ -188,7 +198,7 @@ if __name__ == '__main__':
   print >> sys.stderr, 'Preprocess graph: {0:.1f} seconds'.format(timer)
 
   timer = 0 - time.time() 
-  r, t = pageRank(nodes, g, inG, threads=4)
+  r, t = pageRank(nodes, g, inG, threads=args.p)
   timer += time.time()
   print >> sys.stderr, 'Page Rank: {0:.1f} seconds.'.format(timer)
   for idx, i in enumerate(r):
