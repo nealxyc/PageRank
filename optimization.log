@@ -1,3 +1,94 @@
+Naive implementation:
+
+Python, epsilon 1e-8
+
+CPU: 2.9 GHz Intel Core i5
+Read graph: 30.3860499859 seconds.
+Page Rank: 377.181463957 seconds.
+Done after 67 iterations.
+
+real	6m51.285s
+user	6m47.051s
+sys	0m3.445s
+
+After optimization:
+Read graph: 26.5064520836 seconds.
+Page Rank: 339.696664095 seconds.
+Done after 67 iterations.
+
+real	6m8.896s
+user	6m5.399s
+sys	0m2.089s
+
+===
+Read graph: 27.3086249828 seconds.
+Read 875713 nodes in graph
+Page Rank: 330.826992035 seconds.
+Done after 67 iterations.
+
+real	6m0.932s
+user	5m58.694s
+sys	0m1.542s
+
+===
+Use dict as vector
+Read graph: 26.6066598892 seconds.
+Read 875713 nodes in graph
+Page Rank: 287.525373936 seconds.
+Done after 67 iterations.
+
+real	5m16.534s
+user	5m13.580s
+sys	0m1.771s
+
+===
+Read graph: 24.9926009178 seconds.
+Read 875713 nodes in graph
+Page Rank: 283.078444004 seconds.
+Done after 67 iterations.
+
+=== dict, remove inner []
+Read graph: 25.5084850788 seconds.
+Read 875713 nodes in graph
+Page Rank: 275.780315161 seconds.
+Done after 67 iterations.
+
+real	5m3.572s
+user	5m1.209s
+sys	0m1.522s
+
+=== use array.array
+Read graph: 25.4066710472 seconds.
+Read 875713 nodes in graph
+Page Rank: 327.624927044 seconds.
+Done after 70 iterations.
+
+real	5m55.705s
+user	5m53.525s
+sys	0m1.486s
+
+=== add preprocessing
+Read graph: 25.4834570885 seconds.
+Read 875713 nodes in graph
+Preprocess graph: 6.80310606956 seconds
+Page Rank: 209.519629002 seconds.
+Done after 70 iterations.
+
+real	4m5.517s
+user	4m3.065s
+sys	0m1.790s
+
+=== Again remove inner []
+Read graph: 3e+01 seconds.
+Read 875713 nodes in graph
+Preprocess graph: 7e+00 seconds
+Page Rank: 2e+02 seconds.
+Done after 70 iterations.
+
+real	3m40.885s
+user	3m38.552s
+sys	0m1.672s
+
 ===
 Wed Mar  4 10:30:42 PST 2015
 Read graph: 19.3 seconds.
