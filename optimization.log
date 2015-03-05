@@ -61,3 +61,18 @@ Done after 67 iterations.
 real	2m48.735s
 user	2m45.909s
 sys	0m1.534s
+
+=== Multi-threading is slower (because of GIL)
+Wed Mar  4 22:48:42 PST 2015
+Read graph: 18.5 seconds.
+Preprocess graph: 7.6 seconds
+T0: lower=0, higher=218928
+T1: lower=218928, higher=437856
+T2: lower=437856, higher=656784
+T3: lower=656784, higher=875713
+Page Rank: 244.6 seconds.
+Done after 67 iterations.
+
+real	4m33.272s
+user	4m15.684s
+sys	1m29.875s
