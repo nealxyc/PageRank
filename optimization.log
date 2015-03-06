@@ -167,3 +167,16 @@ Done after 67 iterations.
 real	4m33.272s
 user	4m15.684s
 sys	1m29.875s
+
+=== Moved g into 1D array
+Fri Mar  6 00:47:41 PST 2015
+PID 64958
+Read graph: 22.8 seconds.
+Preprocess graph: 7.8 seconds
+Page Rank: 180.6 seconds.
+Done after 67 iterations.
+
+real	3m33.833s
+user	3m32.440s
+sys	0m1.076s
+
