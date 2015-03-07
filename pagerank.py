@@ -44,6 +44,27 @@ def transformGraph(nodes, inG, g):
     idxG[idx[node]] = outDegree #set([idx[outNode] for outNode in outNodes])
   return idxInG, idxG
 
+def transformToArray(nodes, inG, g):
+  inA = array('l')
+  a = array('l')
+  idx = dict(zip(nodes, range(len(nodes))))
+  idxInG, idxG = transformGraph(nodes, inG, g)
+  i = 0
+  while i < len(nodes): #[<index>, <size>, <out node list>]
+    if i in idxG:
+      a.append(i)
+      outNodes = idxG[i]
+      a.append(len(outNodes))
+      a.extend(outNodes)
+    if i in idxInG:
+      inA.append(i)
+      inNodes = idxInG[i]
+      inA.append(len(inNodes))
+      inA.extend(inNodes)
+    i += 1
+  
+  return inA, a
+
 def fillVector(r, num, lower=0, higher=0):
   if lower > higher:
     lower , higher = higher, lower

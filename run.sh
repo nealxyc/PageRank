@@ -1,1 +1,1 @@
-date && time python pagerank.py  < web-Google.txt > out.txt 
+date && time python pagerank.py  $* < web-Google.txt > out.txt 
