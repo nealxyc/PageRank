@@ -91,3 +91,15 @@ Done after 67 iterations.
 real	1m46.642s
 user	4m16.118s
 sys	0m2.656s
+
+=== flat the graph into 1D array
+Fri Mar  6 23:30:33 PST 2015
+Read graph: 19.5 seconds.
+Preprocess graph: 12.1 seconds
+Processes: 4
+T0: lower=0, higher=218928; ing_low=0, ing_high=1599399
+T1: lower=218928, higher=437856; ing_low=1599403, ing_high=3189457
+T2: lower=437856, higher=656784; ing_low=3189459, ing_high=4805721
+T3: lower=656784, higher=875713; ing_low=4805730, ing_high=6534126
+Page Rank: 67.6 seconds.
+Done after 67 iterations.
