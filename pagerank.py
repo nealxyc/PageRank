@@ -41,14 +41,16 @@ def transformGraph(nodes, inG, g):
 
 def transformToArray(nodes, inG, g):
   a = array('l')
+  idx = dict(zip(nodes, range(len(nodes))))
   idxInG, idxG = transformGraph(nodes, inG, g)
-  for i in range(len(nodes)): #[ <size>, <out node list>]
-    if i not in idxG:
-      a.append(0)
-      continue
-    outNodes = idxG[i]
-    a.append(len(outNodes))
-    a.extend(outNodes)
+  i = 0
+  while i < len(nodes): #[<index>, <size>, <out node list>]
+    if i in idxG:
+      a.append(i) 
+      outNodes = idxG[i]
+      a.append(len(outNodes))
+      a.extend(outNodes)
+    i += 1
   return idxInG, a
 
 
@@ -81,21 +83,19 @@ def pageRank(nodes, g, inG, beta=0.8, e=1e-8, n=1e2):
     fillVector(r_, 0.0)
 
     # start iteration
-    i = 0
-    row_start = 0
-    while i < size:
-      row_size = g[row_start]
-      row_end = row_start + 1
-      if row_size:
-        score_share = r[i] / row_size 
-        sum_r += r[i]
-        cursor = row_end # same as row_start + 1
-	row_end = cursor + row_size
-        while cursor < row_end:
-	  r_[ g[cursor] ] += score_share
-	  cursor += 1
-      row_start = row_end
-      i += 1
+    cursor = 0
+    while cursor < gSize:
+      i = g[cursor]
+      cursor += 1
+      row_size = g[cursor]
+      cursor += 1
+      row_end = cursor + row_size
+
+      score_share = r[i] / row_size
+      sum_r += r[i]
+      while cursor < row_end :
+	r_[ g[cursor] ] += score_share
+	cursor += 1
     
     # multiply by beta
     sum_r = sum_r * beta

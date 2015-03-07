@@ -180,3 +180,14 @@ real	3m33.833s
 user	3m32.440s
 sys	0m1.076s
 
+=== Stores i in graph (array)
+Fri Mar  6 18:41:09 PST 2015
+PID 65578
+Read graph: 19.2 seconds.
+Preprocess graph: 10.2 seconds
+Page Rank: 147.6 seconds.
+Done after 67 iterations.
+
+real	2m59.103s
+user	2m55.691s
+sys	0m1.940s
